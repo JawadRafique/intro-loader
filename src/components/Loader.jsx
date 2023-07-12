@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { gsap, CSSPlugin } from "gsap";
+import { gsap, CSSPlugin, Expo } from "gsap";
 gsap.registerPlugin(CSSPlugin);
 
 const Loader = () => {
@@ -12,10 +12,38 @@ const Loader = () => {
             setCounter((counter) =>
                 counter < 100
                     ? counter + 1
-                    : (clearInterval(count), setCounter(100))
+                    : (clearInterval(count),
+                      setCounter(100),
+                      afterIntroAnimation())
             );
         }, 25);
     }, []);
+
+    const afterIntroAnimation = () => {
+        const t1 = gsap.timeline({
+            onComplete: () => {
+                console.log("completed");
+            },
+        });
+
+        t1.to(".follow", {
+            width: "100%",
+            duration: 1.2,
+            delay: 0.7,
+            ease: Expo.easeInOut,
+        });
+
+        t1.to(
+            "#count",
+            {
+                // backgroundColor: "#121212",
+                color: "#121212",
+                duration: 0.1,
+                ease: Expo.easeInOut,
+            },
+            "-=0.7"
+        );
+    };
 
     return (
         <Loading>
@@ -46,10 +74,10 @@ const Loading = styled.div`
 `;
 const Follow = styled.div`
     position: absolute;
-    background-color: #f48049;
+    background-color: #121212;
     height: 2px;
     width: 0;
-    left: 0;
+    right: 0;
     z-index: 2;
 `;
 
